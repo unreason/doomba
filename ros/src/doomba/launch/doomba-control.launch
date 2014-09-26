@@ -1,0 +1,6 @@
+<launch>
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find doomba)/urdf/doomba.urdf.xacro'" />
+	
+
+	<node name="rviz" pkg="rviz" type="rviz" required="true" />
+</launch>

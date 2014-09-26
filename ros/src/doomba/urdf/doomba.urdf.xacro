@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+  The complete turtlebot library of xacros for easy reference
+ -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="doomba">
+  <!-- General -->
+  <xacro:include filename="$(find turtlebot_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find turtlebot_description)/urdf/turtlebot_properties.urdf.xacro"/>
+  <!-- Bases -->
+  <xacro:include filename="$(find create_description)/urdf/create.urdf.xacro"/>
+  <link name="neato_laser">
+    <visual>
+      <geometry>
+        <cylinder radius="0.03925" length="0.03" />
+      </geometry>
+    </visual>
+  </link>
+ 
+  <joint name="base_laser" type="fixed">
+    <origin xyz="-0.035 0 0.119" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="neato_laser" />
+  </joint>
+
+  
+  <create/>
+
+</robot>

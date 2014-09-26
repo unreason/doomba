@@ -1,0 +1,38 @@
+<launch>
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find doomba)/urdf/doomba.urdf.xacro'" />
+	<arg name="serialport" value="/dev/ttyO1"/>
+
+	<!-- Turtlebot Driver -->
+	<node pkg="create_node" type="turtlebot_node.py" name="turtlebot_node" respawn="true" args="--respawnable">
+		<param name="bonus" value="false" />
+		<param name="update_rate" value="30.0" />
+		<param name="port" value="$(arg serialport)" />
+		<remap from="cmd_vel" to="mobile_base/commands/velocity" />
+		<remap from="turtlebot_node/sensor_state" to="mobile_base/sensors/core" />
+		<remap from="imu/data" to="mobile_base/sensors/imu_data" />
+		<remap from="imu/raw" to="mobile_base/sensors/imu_data_raw" />
+	</node>
+
+	  <!-- The odometry estimator -->
+	<node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+		<remap from="imu_data" to="mobile_base/sensors/imu_data"/>
+		<remap from="robot_pose_ekf/odom" to="odom_combined"/>
+		<param name="freq" value="10.0"/>
+		<param name="sensor_timeout" value="1.0"/>
+		<param name="publish_tf" value="true"/>
+		<param name="odom_used" value="true"/>
+		<param name="imu_used" value="false"/>
+		<param name="vo_used" value="false"/>
+		<param name="output_frame" value="odom"/>
+	</node>
+
+
+	<node name="neato_laser_publisher" pkg="xv_11_laser_driver" type="neato_laser_publisher">
+		<param name="port" value="/dev/ttyO2" />
+		<param name="firmware_version" value="2" />
+	</node>
+	<!--<node name="rviz" pkg="rviz" type="rviz" required="true" /> -->
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+		<param name="publish_frequency" value="10" />
+	</node>
+</launch>
